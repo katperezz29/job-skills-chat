@@ -29,7 +29,10 @@ export default function App() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
 
-      setMessages([...updated, { role: "assistant", content: data.reply }]);
+      setMessages([
+        ...updated,
+        { role: "assistant", content: data.reply, sources: data.sources },
+      ]);
     } catch (err) {
       setMessages([
         ...updated,
@@ -42,13 +45,20 @@ export default function App() {
 
   return (
     <div className="chat">
-      <h2>My Personal Chat</h2>
+      <h2>Job Skills Chat</h2>
       <div className="grid">
         <div className="grid-item">
           <div className="messages">
             {messages.map((m, i) => (
               <div key={i} className={`bubble ${m.role}`}>
                 {m.content}
+                {m.sources?.length > 0 && (
+                  <div
+                    style={{ fontSize: "0.75rem", opacity: 0.7, marginTop: 4 }}
+                  >
+                    Sources: {m.sources.join(", ")}
+                  </div>
+                )}
               </div>
             ))}
             {loading && <div className="bubble assistant">Thinking...</div>}
@@ -67,10 +77,10 @@ export default function App() {
             </button>
           </div>
         </div>
-        <div className="grid-item">
+        {/* <div className="grid-item">
           <h3>Additional Content</h3>
           <p>This is the second grid item.</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
